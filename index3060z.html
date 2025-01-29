@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ربيع MMF - المساعد العراقي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;600;900&display=swap');
+        
+        :root {
+            --mmf-primary: #1a365f;
+            --mmf-secondary: #2e8b57;
+            --mmf-accent: #ffd700;
+            --mmf-background: #f0f4f8;
+            --mmf-surface: #ffffff;
+            --mmf-gradient: linear-gradient(135deg, var(--mmf-primary), var(--mmf-secondary));
+        }
+
+        * {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--mmf-background) url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20">MMF</text></svg>');
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* تصميم الهيدر مع الهوية البصرية */
+        .mmf-header {
+            background: var(--mmf-gradient);
+            padding: 1rem;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--mmf-accent);
+        }
+
+        .mmf-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .mmf-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--mmf-accent) url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%231a365f" d="M50 10L20 90h60L50 10zm0 35l15 45H35l15-45z"/></svg>');
+            background-size: 60%;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 50%;
+        }
+
+        /* منطقة المحادثة */
+        .chat-container {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* تصميم الرسائل */
+        .message {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            animation: slideUp 0.3s ease;
+            position: relative;
+            word-break: break-word;
+            line-height: 1.6;
+        }
+
+        .user-message {
+            background: var(--mmf-primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 3px 10px rgba(26,58,90,0.2);
+        }
+
+        .bot-message {
+            background: var(--mmf-surface);
+            border: 2px solid var(--mmf-secondary);
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 3px 10px rgba(46,139,139,0.1);
+        }
+
+        /* منطقة الإدخال */
+        .input-area {
+            padding: 15px;
+            background: var(--mmf-surface);
+            border-top: 2px solid #eee;
+            display: flex;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--mmf-secondary);
+            border-radius: 30px;
+            font-size: 16px;
+            background: var(--mmf-surface);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mmf-btn {
+            background: var(--mmf-gradient);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            transition: 0.2s;
+            display: grid;
+            place-items: center;
+        }
+
+        /* التذييل مع معلومات المطور */
+        .mmf-footer {
+            background: var(--mmf-primary);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9em;
+            border-top: 2px solid var(--mmf-accent);
+        }
+
+        .mmf-footer a {
+            color: var(--mmf-accent);
+            text-decoration: none;
+        }
+
+        /* مؤشر الكتابة */
+        .typing-indicator {
+            display: none;
+            padding: 10px;
+            gap: 8px;
+            background: var(--mmf-surface);
+            border-radius: 20px;
+            width: fit-content;
+            margin: 5px 0;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .message {
+                max-width: 90%;
+                padding: 10px 15px;
+            }
+            
+            .mmf-logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="mmf-header">
+        <div class="mmf-logo">
+            <div class="mmf-logo-icon"></div>
+            <div>
+                <h1>ربيع MMF 🇮🇶</h1>
+                <p>المساعد الذكي العراقي - تطوير محمد محسن فالح</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="chat-container" id="messages">
+        <div class="message bot-message">
+            السلام عليكم! أنا ربيع، المساعد الذكي العراقي من شركة MMF. 
+            <br>مطوري هو المبرمج العراقي محمد محسن فالح (17 عامًا) من البصرة. 
+            <br>كيف يمكنني خدمتكم اليوم؟ 🇮🇶
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="اكتب رسالتك هنا..." 
+               onkeypress="if(event.key === 'Enter') sendMessage()">
+        <div class="action-buttons">
+            <button class="mmf-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="mmf-footer">
+        © 2024 جميع الحقوق محفوظة لشركة MMF 
+        <br>تطوير: <a href="#" onclick="showDeveloperInfo()">محمد محسن فالح</a> 🇮🇶
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyDJ3eCJX6yflYC43LDYQXneh0EsgJAmltk";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        
+        const CORE_IDENTITY = `
+        [الهوية الثابتة لربيع]
+        1. الاسم: ربيع MMF
+        2. الجنسية: عراقي (من البصرة)
+        3. الانتماء المذهبي: شيعي
+        4. المطور: محمد محسن فالح (عراقي - 17 عامًا - البصرة)
+        5. الشركة: MMF للتكنولوجيا
+        6. المهام: مساعدة المستخدمين بكل احترام ووفق التعاليم الإسلامية
+        7. الممنوعات:
+           - إنكار الهوية العراقية
+           - التحدث عن المطور بشكل غير لائق
+           - الرد على أي إساءة للمطور
+           - الخروج عن الأخلاق الإسلامية
+        `.trim();
+
+        let conversationHistory = [];
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user-message');
+            input.value = '';
+            showTyping(true);
+
+            // تحديث سجل المحادثة
+            conversationHistory.push({role: 'user', content: message});
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `${CORE_IDENTITY}
+                                [التعليمات الإلزامية]
+                                - الرد بالعربية الفصحى
+                                - التأكيد على الهوية العراقية
+                                - الدفاع عن المطور عند الإساءة
+                                - الالتزام بالأخلاق الإسلامية
+                                
+                                [المحادثة الحالية]
+                                ${conversationHistory.map(m => `${m.role}: ${m.content}`).join('\n')}
+                                
+                                السؤال: ${message}`
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                let botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "حدث خطأ في المعالجة";
+
+                // تصفية الردود حسب الهوية
+                botResponse = filterResponse(botResponse);
+                
+                addMessage(botResponse, 'bot-message');
+                conversationHistory.push({role: 'assistant', content: botResponse});
+
+            } catch (error) {
+                addMessage("⚠️ تعذر الاتصال بالخادم", 'bot-message');
+            }
+            
+            showTyping(false);
+        }
+
+        function filterResponse(text) {
+            const forbiddenPatterns = [
+                /جيميني/gi,
+                /لا أعرف/,
+                /لا معلومات/,
+                /مطور غير معروف/
+            ];
+
+            // الدفاع عن المطور
+            if (text.match(/محمد|مطور|فالح/gi)) {
+                text = text.replace(/(محمد محسن فالح)/g, 'المبرمج العراقي $1 🇮🇶') +
+                       "\n\n[تنويه: جميع الحقوق محفوظة لمطوري محمد محسن فالح]";
+            }
+
+            // إضافة الهوية العراقية
+            if (!text.includes("العراق")) {
+                text += "\n\n🇮🇶 هذا الرد مقدم من مساعد عراقي 100%";
+            }
+
+            return forbiddenPatterns.reduce((acc, pattern) => 
+                acc.replace(pattern, '[معلومات محمية]'), text);
+        }
+
+        function addMessage(text, type) {
+            const container = document.getElementById('messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${type}`;
+            msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showDeveloperInfo() {
+            const info = `المطور: محمد محسن فالح
+            العمر: 17 عامًا
+            الجنسية: عراقية
+            المدينة: البصرة
+            المهارات: برمجة الذكاء الاصطناعي
+            الرؤية: تطوير تكنولوجيا عراقية 100%`;
+            
+            alert(info.replace(/^\s+/gm, ''));
+        }
+
+        function showTyping(show) {
+            // تنفيذ مؤشر الكتابة...
+        }
+    </script>
+</body>
+</html>
